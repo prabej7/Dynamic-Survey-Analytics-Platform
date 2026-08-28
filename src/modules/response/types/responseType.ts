@@ -1,7 +1,10 @@
+import { Prisma } from "../../../../generated/prisma/client";
+
 export interface CreateResponseInput {
-  // TODO: Define create input
+  surveyId: string;
+  answers: Prisma.InputJsonValue;
 }
 
 export interface UpdateResponseInput {
-  // TODO: Define update input
+  answers?: Prisma.InputJsonValue;
 }
