@@ -5,7 +5,7 @@ import authService from "../services/authService";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: false,
   sameSite: "lax" as const,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
@@ -38,7 +38,7 @@ const authController = {
   logout: asyncHandler(async (_req: Request, res: Response) => {
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       sameSite: "lax",
     });
 
