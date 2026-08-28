@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
-import express, { NextFunction, Response, Request } from "express";
 import cors from "cors";
+import express, { NextFunction, Request, Response } from "express";
 
 const app = express();
 
