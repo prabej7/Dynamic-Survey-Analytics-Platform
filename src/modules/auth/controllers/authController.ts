@@ -5,9 +5,13 @@ import authService from "../services/authService";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: false,
-  sameSite: "lax" as const,
+  secure: process.env.NODE_ENV === "production",
+  sameSite:
+    process.env.NODE_ENV === "production"
+      ? ("none" as const)
+      : ("lax" as const),
   maxAge: 7 * 24 * 60 * 60 * 1000,
+  path: "/",
 };
 
 const authController = {
@@ -38,8 +42,9 @@ const authController = {
   logout: asyncHandler(async (_req: Request, res: Response) => {
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
     });
 
     res.status(200).json({
