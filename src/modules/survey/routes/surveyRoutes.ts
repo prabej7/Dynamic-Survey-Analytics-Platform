@@ -1,7 +1,9 @@
 import { Router } from "express";
 import authMiddleware from "../../../middlewares/authMiddleware";
 import roleMiddleware from "../../../middlewares/roleMiddleware";
+import { sanitize } from "../../../middlewares/sanitize";
 import surveyController from "../controllers/surveyController";
+import { createSurveySchema, updateSurveySchema } from "../validation/surveyValidation";
 
 const router = Router();
 
@@ -23,6 +25,7 @@ router.post(
   "/",
   authMiddleware,
   roleMiddleware("ADMIN"),
+  sanitize(createSurveySchema),
   surveyController.create,
 );
 
@@ -30,6 +33,7 @@ router.patch(
   "/:id",
   authMiddleware,
   roleMiddleware("ADMIN"),
+  sanitize(updateSurveySchema),
   surveyController.update,
 );
 
