@@ -3,7 +3,10 @@ import authMiddleware from "../../../middlewares/authMiddleware";
 import roleMiddleware from "../../../middlewares/roleMiddleware";
 import { sanitize } from "../../../middlewares/sanitize";
 import surveyController from "../controllers/surveyController";
-import { createSurveySchema, updateSurveySchema } from "../validation/surveyValidation";
+import {
+  createSurveySchema,
+  updateSurveySchema,
+} from "../validation/surveyValidation";
 
 const router = Router();
 
@@ -48,7 +51,16 @@ router.patch(
   "/:id/publish",
   authMiddleware,
   roleMiddleware("ADMIN"),
-  surveyController.publish
+  surveyController.publish,
+);
+
+router.get("/slug/:slug", surveyController.findBySlug);
+
+router.get(
+  "/:id/analytics",
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  surveyController.analytics,
 );
 
 export default router;

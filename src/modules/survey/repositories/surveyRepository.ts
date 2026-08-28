@@ -43,6 +43,28 @@ const surveyRepository = {
       where: { id },
     });
   },
+
+  async findBySlug(slug: string) {
+    return prisma.survey.findUnique({
+      where: { slug },
+    });
+  },
+
+  async getResponsesForAnalytics(surveyId: string) {
+    return prisma.response.findMany({
+      where: {
+        surveyId,
+      },
+      select: {
+        id: true,
+        answers: true,
+        submittedAt: true,
+      },
+      orderBy: {
+        submittedAt: "asc",
+      },
+    });
+  },
 };
 
 export default surveyRepository;

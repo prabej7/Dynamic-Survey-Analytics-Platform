@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import asyncHandler from "../../../middlewares/asyncHandler";
+import surveyAnalyticsService from "../services/surveyAnalyticsService";
 import surveyService from "../services/surveyService";
 
 const surveyController = {
@@ -61,7 +62,28 @@ const surveyController = {
     });
   }),
 
+  findBySlug: asyncHandler(async (req: Request, res: Response) => {
+    const result = await surveyService.findBySlug(req.params.slug);
 
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }),
+
+   analytics: asyncHandler(
+    async (req: Request, res: Response) => {
+      const result =
+        await surveyAnalyticsService.getAnalytics(
+          req.params.id
+        );
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    }
+  ),
 };
 
 export default surveyController;
