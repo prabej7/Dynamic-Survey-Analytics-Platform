@@ -48,6 +48,20 @@ const surveyController = {
 
     res.status(204).send();
   }),
+
+  publish: asyncHandler(async (req: Request, res: Response) => {
+    const result = await surveyService.publish(
+      req.params.id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Survey published successfully",
+      data: result,
+    });
+  }),
+
+
 };
 
 export default surveyController;

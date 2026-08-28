@@ -34,6 +34,12 @@ const surveyService = {
     }
     return surveyRepository.remove(id);
   },
+
+  async publish(id: string) {
+    return await surveyRepository.update(id, {
+      isPublished: true,
+    });
+  },
 };
 
 export default surveyService;

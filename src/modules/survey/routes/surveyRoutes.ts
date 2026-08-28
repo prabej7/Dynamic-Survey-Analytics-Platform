@@ -44,4 +44,11 @@ router.delete(
   surveyController.remove,
 );
 
+router.patch(
+  "/:id/publish",
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  surveyController.publish
+);
+
 export default router;
