@@ -1,31 +1,43 @@
 import { Router } from "express";
+import authMiddleware from "../../../middlewares/authMiddleware";
+import roleMiddleware from "../../../middlewares/roleMiddleware";
 import surveyController from "../controllers/surveyController";
 
 const router = Router();
 
 router.get(
   "/",
-  surveyController.getAll
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  surveyController.getAll,
 );
 
 router.get(
   "/:id",
-  surveyController.getById
+  authMiddleware,
+  roleMiddleware("USER", "ADMIN"),
+  surveyController.getById,
 );
 
 router.post(
   "/",
-  surveyController.create
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  surveyController.create,
 );
 
 router.patch(
   "/:id",
-  surveyController.update
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  surveyController.update,
 );
 
 router.delete(
   "/:id",
-  surveyController.remove
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  surveyController.remove,
 );
 
 export default router;
