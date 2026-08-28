@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authMiddleware_1 = __importDefault(require("../../../middlewares/authMiddleware"));
+const roleMiddleware_1 = __importDefault(require("../../../middlewares/roleMiddleware"));
+const sanitize_1 = require("../../../middlewares/sanitize");
+const surveyController_1 = __importDefault(require("../controllers/surveyController"));
+const surveyValidation_1 = require("../validation/surveyValidation");
+const router = (0, express_1.Router)();
+router.get("/", authMiddleware_1.default, (0, roleMiddleware_1.default)("ADMIN"), surveyController_1.default.getAll);
+router.get("/:id", authMiddleware_1.default, (0, roleMiddleware_1.default)("USER", "ADMIN"), surveyController_1.default.getById);
+router.post("/", authMiddleware_1.default, (0, roleMiddleware_1.default)("ADMIN"), (0, sanitize_1.sanitize)(surveyValidation_1.createSurveySchema), surveyController_1.default.create);
+router.patch("/:id", authMiddleware_1.default, (0, roleMiddleware_1.default)("ADMIN"), (0, sanitize_1.sanitize)(surveyValidation_1.updateSurveySchema), surveyController_1.default.update);
+router.delete("/:id", authMiddleware_1.default, (0, roleMiddleware_1.default)("ADMIN"), surveyController_1.default.remove);
+router.patch("/:id/publish", authMiddleware_1.default, (0, roleMiddleware_1.default)("ADMIN"), surveyController_1.default.publish);
+router.get("/slug/:slug", surveyController_1.default.findBySlug);
+router.get("/:id/analytics", authMiddleware_1.default, (0, roleMiddleware_1.default)("ADMIN"), surveyController_1.default.analytics);
+exports.default = router;
