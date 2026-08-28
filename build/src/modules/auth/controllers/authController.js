@@ -16,7 +16,7 @@ const asyncHandler_1 = __importDefault(require("../../../middlewares/asyncHandle
 const authService_1 = __importDefault(require("../services/authService"));
 const COOKIE_OPTIONS = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
 };
@@ -41,7 +41,7 @@ const authController = {
     logout: (0, asyncHandler_1.default)((_req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.clearCookie("accessToken", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: false,
             sameSite: "lax",
         });
         res.status(200).json({
