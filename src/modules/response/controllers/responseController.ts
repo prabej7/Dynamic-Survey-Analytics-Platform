@@ -1,93 +1,71 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
+
+import asyncHandler from "../../../middlewares/asyncHandler";
 import responseService from "../services/responseService";
 
 const responseController = {
-  async getAll(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const result = await responseService.getAll();
+  getAll: asyncHandler(async (_req: Request, res: Response) => {
+    const result = await responseService.getAll();
 
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }),
 
-  async getById(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const result = await responseService.getById(
-        req.params.id
+  getById: asyncHandler(async (req: Request, res: Response) => {
+    const result = await responseService.getById(
+      req.params.id
+    );
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }),
+
+  getBySurveyId: asyncHandler(
+    async (req: Request, res: Response) => {
+      const result = await responseService.getBySurveyId(
+        req.params.surveyId
       );
 
       res.status(200).json({
         success: true,
         data: result,
       });
-    } catch (error) {
-      next(error);
     }
-  },
+  ),
 
-  async create(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const result = await responseService.create(req.body);
+  create: asyncHandler(async (req: Request, res: Response) => {
+    const result = await responseService.create({
+      surveyId: req.params.surveyId,
+      answers: req.body.answers,
+    });
 
-      res.status(201).json({
-        success: true,
-        data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(201).json({
+      success: true,
+      data: result,
+    });
+  }),
 
-  async update(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const result = await responseService.update(
-        req.params.id,
-        req.body
-      );
+  update: asyncHandler(async (req: Request, res: Response) => {
+    const result = await responseService.update(
+      req.params.id,
+      req.body
+    );
 
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }),
 
-  async remove(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      await responseService.remove(req.params.id);
+  remove: asyncHandler(async (req: Request, res: Response) => {
+    await responseService.remove(req.params.id);
 
-      res.status(204).send();
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(204).send();
+  }),
 };
 
 export default responseController;
