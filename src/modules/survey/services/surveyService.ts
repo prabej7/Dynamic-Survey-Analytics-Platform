@@ -1,3 +1,4 @@
+import { NotFoundError } from "../../../utils/AppError";
 import surveyRepository from "../repositories/surveyRepository";
 import { CreateSurveyInput, UpdateSurveyInput } from "../types/surveyType";
 
@@ -7,6 +8,10 @@ const surveyService = {
   },
 
   async getById(id: string) {
+    const existingSurvey = await surveyRepository.findById(id);
+    if (!existingSurvey) {
+      throw new NotFoundError(`Survey with ID ${id} not found`);
+    }
     return surveyRepository.findById(id);
   },
 
@@ -15,10 +20,18 @@ const surveyService = {
   },
 
   async update(id: string, data: UpdateSurveyInput) {
+    const existingSurvey = await surveyRepository.findById(id);
+    if (!existingSurvey) {
+      throw new NotFoundError(`Survey with ID ${id} not found`);
+    }
     return surveyRepository.update(id, data);
   },
 
   async remove(id: string) {
+    const existingSurvey = await surveyRepository.findById(id);
+    if (!existingSurvey) {
+      throw new NotFoundError(`Survey with ID ${id} not found`);
+    }
     return surveyRepository.remove(id);
   },
 };
