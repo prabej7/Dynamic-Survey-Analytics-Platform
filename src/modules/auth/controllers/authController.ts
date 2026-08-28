@@ -1,79 +1,61 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
+import asyncHandler from "../../../middlewares/asyncHandler";
 import authService from "../services/authService";
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 const authController = {
-  async register(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { user, token } = await authService.register(req.body);
+  register: asyncHandler(async (req: Request, res: Response) => {
+    const { user, token } = await authService.register(req.body);
 
-      res.cookie("accessToken", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+    res.cookie("accessToken", token, COOKIE_OPTIONS);
 
-      res.status(201).json({
-        success: true,
-        data: user,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(201).json({
+      success: true,
+      data: user,
+    });
+  }),
 
-  async login(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { email, password } = req.body;
+  login: asyncHandler(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
 
-      const { user, token } = await authService.login(email, password);
+    const { user, token } = await authService.login(email, password);
 
-      res.cookie("accessToken", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+    res.cookie("accessToken", token, COOKIE_OPTIONS);
 
-      res.status(200).json({
-        success: true,
-        data: user,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  }),
 
-  async logout(req: Request, res: Response, next: NextFunction) {
-    try {
-      res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      });
+  logout: asyncHandler(async (_req: Request, res: Response) => {
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
 
-      res.status(200).json({
-        success: true,
-        message: "Logged out successfully",
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  }),
 
-  async getProfile(req: Request, res: Response, next: NextFunction) {
-    try {
-      const result = await authService.getProfile(req.user.id);
+  getProfile: asyncHandler(async (req: Request, res: Response) => {
+    const result = await authService.getProfile(req.user!.id);
 
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }),
 };
 
 export default authController;
