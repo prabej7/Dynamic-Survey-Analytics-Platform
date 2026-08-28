@@ -40,6 +40,14 @@ const surveyService = {
       isPublished: true,
     });
   },
+
+  async findBySlug(slug: string) {
+    const existingSurvey = await surveyRepository.findBySlug(slug);
+    if (!existingSurvey) {
+      throw new NotFoundError(`Survey with slug ${slug} not found`);
+    }
+    return existingSurvey;
+  },
 };
 
 export default surveyService;
